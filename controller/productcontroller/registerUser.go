@@ -19,8 +19,8 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 		ResponseError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	var book models.Book
-	if err := models.DB.First(&book, id).Error; err != nil {
+	var user models.User
+	if err := models.DB.First(&user, id).Error; err != nil {
 		switch err {
 		case gorm.ErrRecordNotFound:
 			ResponseError(w, http.StatusNotFound, "Data tidak ditemukan")
@@ -30,23 +30,23 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	ResponseJson(w, http.StatusOK, book)
+	ResponseJson(w, http.StatusOK, user)
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
-	var book models.Book
+	var user models.User
 	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&book); err != nil {
+	if err := decoder.Decode(&user); err != nil {
 		ResponseError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 	defer r.Body.Close()
-	if err := models.DB.Create(&book).Error; err != nil {
+	if err := models.DB.Create(&user).Error; err != nil {
 		ResponseError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	ResponseJson(w, http.StatusOK, book)
-	log.Printf("Creating success id :%d", book.Id)
+	ResponseJson(w, http.StatusOK, user)
+	log.Printf("Creating success id :%d", user.Id)
 }
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
@@ -56,21 +56,21 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		ResponseError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	var book models.Book
+	var user models.User
 	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&book); err != nil {
+	if err := decoder.Decode(&user); err != nil {
 		ResponseError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 	defer r.Body.Close()
-	if models.DB.Where("id = ?", id).Updates(&book).RowsAffected == 0 {
-		message := fmt.Sprintf("updating failed, id :%d not found", book.Id)
+	if models.DB.Where("id = ?", id).Updates(&user).RowsAffected == 0 {
+		message := fmt.Sprintf("updating failed, id :%d not found", user.Id)
 		ResponseError(w, http.StatusBadRequest, message)
 		return
 	}
-	book.Id = id
-	ResponseJson(w, http.StatusOK, book)
-	log.Printf("Updating success id:%d", book.Id)
+	user.Id = id
+	ResponseJson(w, http.StatusOK, user)
+	log.Printf("Updating success id:%d", user.Id)
 }
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
@@ -81,13 +81,13 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-	var book models.Book
-	if models.DB.Delete(&book, input["id"]).RowsAffected == 0 {
-		message := fmt.Sprintf("Deleting Failed, id :%d not found", book.Id)
+	var user models.User
+	if models.DB.Delete(&user, input["id"]).RowsAffected == 0 {
+		message := fmt.Sprintf("Deleting Failed, id :%d not found", user.Id)
 		ResponseError(w, http.StatusBadRequest, message)
 		return
 	}
-	message := map[string]string{"message": "book berhasil dihapus"}
+	message := map[string]string{"message": "user berhasil dihapus"}
 	ResponseJson(w, http.StatusOK, message)
-	log.Printf("Deleting success id:%d", book.Id)
+	log.Printf("Deleting success id:%d", user.Id)
 }
