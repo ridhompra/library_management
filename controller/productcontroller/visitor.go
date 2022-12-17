@@ -41,18 +41,15 @@ func GetVisitorbyid(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	ResponseJson(w, http.StatusOK, book)
-	// log.Println(product)
 }
 
 func CreateVisitor(w http.ResponseWriter, r *http.Request) {
 	var book models.Book
 	decoder := json.NewDecoder(r.Body)
-	//men decode ke variable book
 	if err := decoder.Decode(&book); err != nil {
 		ResponseError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	//diclose dulu  bodynya
 	defer r.Body.Close()
 	if err := models.DB.Create(&book).Error; err != nil {
 		ResponseError(w, http.StatusInternalServerError, err.Error())
@@ -71,12 +68,10 @@ func UpdateVisitor(w http.ResponseWriter, r *http.Request) {
 	}
 	var book models.Book
 	decoder := json.NewDecoder(r.Body)
-	//men decode ke variable book
 	if err := decoder.Decode(&book); err != nil {
 		ResponseError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	//diclose dulu  bodynya
 	defer r.Body.Close()
 	if models.DB.Where("id = ?", id).Updates(&book).RowsAffected == 0 {
 		message := fmt.Sprintf("updating failed, id :%d not found", book.Id)
@@ -95,7 +90,6 @@ func DeleteVisitor(w http.ResponseWriter, r *http.Request) {
 		ResponseError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	//diclose dulu  bodynya
 	defer r.Body.Close()
 	var book models.Book
 	if models.DB.Delete(&book, input["id"]).RowsAffected == 0 {
