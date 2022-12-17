@@ -12,17 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetAllVisitor(w http.ResponseWriter, r *http.Request) {
-	var book []models.Book
-
-	if err := models.DB.Find(&book).Error; err != nil {
-		ResponseError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	ResponseJson(w, http.StatusOK, book)
-}
-
-func GetVisitorByid(w http.ResponseWriter, r *http.Request) {
+func GetUserById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.ParseInt(vars["id"], 10, 64)
 	if err != nil {
@@ -43,7 +33,7 @@ func GetVisitorByid(w http.ResponseWriter, r *http.Request) {
 	ResponseJson(w, http.StatusOK, book)
 }
 
-func CreateVisitor(w http.ResponseWriter, r *http.Request) {
+func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var book models.Book
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&book); err != nil {
@@ -59,7 +49,7 @@ func CreateVisitor(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Creating success id :%d", book.Id)
 }
 
-func UpdateVisitor(w http.ResponseWriter, r *http.Request) {
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.ParseInt(vars["id"], 10, 64)
 	if err != nil {
@@ -83,7 +73,7 @@ func UpdateVisitor(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Updating success id:%d", book.Id)
 }
 
-func DeleteVisitor(w http.ResponseWriter, r *http.Request) {
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	input := map[string]string{"id": ""}
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&input); err != nil {
