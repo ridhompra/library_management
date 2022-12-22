@@ -18,3 +18,5 @@ this is a mini project creating a management library. this project build monolit
     ```sh
     make run
     ```
+6. import postman collection
+7. test running

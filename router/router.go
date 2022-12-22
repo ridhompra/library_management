@@ -2,43 +2,55 @@ package router
 
 import (
 	"log"
-	"net/http"
-	"project/library_Management/controller"
-	"project/library_Management/controller/productcontroller"
+	"os"
+	"project/library_Management/controller/authcontrollers"
+	"project/library_Management/controller/productcontrollers"
 
-	"github.com/gorilla/mux"
+	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 )
 
 func Router() {
-	r := mux.NewRouter()
-	port := ":8080"
-	r.HandleFunc("/", controller.Hompage)
-	// book
-	r.HandleFunc("/book", productcontroller.GetAllBook).Methods("GET")
-	r.HandleFunc("/book/{id}", productcontroller.GetBookbyid).Methods("GET")
-	r.HandleFunc("/book", productcontroller.CreateBook).Methods("POST")
-	r.HandleFunc("/book/{id}", productcontroller.UpdateBook).Methods("PUT")
-	r.HandleFunc("/book", productcontroller.DeleteBook).Methods("DELETE")
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Failed to connect .ENV")
+	}
+
+	port := os.Getenv("PORT")
+	app := fiber.New()
+
+	api := app.Group("/api")
+	v1 := api.Group("/v1")
+
+	// v1
+	// sign up and login session
+	v1.Get("/", authcontrollers.HealthCheck)
+	v1.Post("/signup", authcontrollers.SignUp)
+	v1.Get("/users", authcontrollers.GetAllDataUser)
+	v1.Post("/login", authcontrollers.Login)
+
+	//book
+	v1.Get("/book", productcontrollers.GetAllBook)
+	v1.Get("/book/:id", productcontrollers.GetBookbyid)
+	v1.Post("/book", productcontrollers.CreateBook)
+	v1.Put("/book/:id", productcontrollers.UpdateBook)
+	v1.Delete("/book", productcontrollers.DeleteBook)
 
 	// employee
-	r.HandleFunc("/employee", productcontroller.GetAllEmployee).Methods("GET")
-	r.HandleFunc("/employee/{id}", productcontroller.GetEmployeebyid).Methods("GET")
-	r.HandleFunc("/employee", productcontroller.CreateEmployee).Methods("POST")
-	r.HandleFunc("/employee/{id}", productcontroller.UpdateEmployee).Methods("PUT")
-	r.HandleFunc("/employee", productcontroller.DeleteEmployee).Methods("DELETE")
+	v1.Get("/employee", productcontrollers.GetAllEmployee)
+	v1.Get("/employee/:id", productcontrollers.GetEmployeebyid)
+	v1.Post("/employee", productcontrollers.CreateEmployee)
+	v1.Put("/employee/:id", productcontrollers.UpdateEmployee)
+	v1.Delete("/employee", productcontrollers.DeleteEmployee)
 
 	// visitor
-	r.HandleFunc("/visitor", productcontroller.GetAllVisitor).Methods("GET")
-	r.HandleFunc("/visitor/{id}", productcontroller.GetVisitorByid).Methods("GET")
-	r.HandleFunc("/visitor", productcontroller.CreateVisitor).Methods("POST")
-	r.HandleFunc("/visitor/{id}", productcontroller.UpdateVisitor).Methods("PUT")
-	r.HandleFunc("/visitor", productcontroller.DeleteVisitor).Methods("DELETE")
+	v1.Get("/visitor", productcontrollers.GetAllVisitor)
+	v1.Get("/visitor/:id", productcontrollers.GetVisitorById)
+	v1.Post("/visitor", productcontrollers.CreateVisitor)
+	v1.Put("/visitor/:id", productcontrollers.UpdateVisitor)
+	v1.Delete("/visitor", productcontrollers.DeleteVisitor)
 
-	//user
-	r.HandleFunc("/visitor/{id}", productcontroller.GetUserById).Methods("GET")
-	r.HandleFunc("/visitor", productcontroller.CreateUser).Methods("POST")
-	r.HandleFunc("/visitor/{id}", productcontroller.UpdateUser).Methods("PUT")
-	r.HandleFunc("/visitor", productcontroller.DeleteUser).Methods("DELETE")
 	log.Printf("Server Running port %s \n", port)
-	log.Fatal(http.ListenAndServe(port, r))
+	log.Println(app.Listen(port))
+
 }

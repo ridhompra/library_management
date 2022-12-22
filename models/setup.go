@@ -34,7 +34,8 @@ func ConnectionDB() {
 	db.AutoMigrate(
 		&Book{},
 		&Employee{},
-		&Visitor{})
+		&Visitor{},
+		&User{})
 	DB = db
 
 }

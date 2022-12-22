@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"golang.org/x/crypto/bcrypt"
+)
 
 type Main struct {
 	Book     Book     `gorm:"foreignKey:BookRefer"`
@@ -19,15 +21,21 @@ type Employee struct {
 	Sex      string `gorm:"varchar(1)" json:"sex"`
 }
 type Visitor struct {
-	Id         int64     `gorm:"primarykey" json:"id"`
-	Name       string    `gorm:"varchar(50)" json:"name"`
-	LoanDate   time.Time `gorm:"type:date" json:"loan_date"`
-	Status     string    `gorm:"varchar(20)" json:"status"`
-	ReturnDate time.Time `gorm:"type:date"  json:"return_date"`
+	Id         int64  `gorm:"primarykey" json:"id"`
+	Name       string `gorm:"varchar(50)" json:"name"`
+	LoanDate   string `gorm:"type:date" json:"loan_date"`
+	Status     string `gorm:"varchar(20)" json:"status"`
+	ReturnDate string `gorm:"type:date"  json:"return_date"`
 }
 type User struct {
 	Id       int64  `gorm:"primarykey" json:"id"`
+	Fullname string `gorm:"varchar(50);column:full_name" json:"full_name"`
 	Username string `gorm:"varchar(50)" json:"username"`
 	Password string `gorm:"varchar(50)" json:"Password"`
 	Email    string `gorm:"varchar(50)" json:"Email"`
+}
+
+func (user *User) SetPassword(password string) {
+	hashedPass, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
+	user.Password = string(hashedPass)
 }

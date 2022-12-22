@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go auth</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+    <style>
+        .container {
+            max-width: 500px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <form action="/login" method="post">
+            <h1>SIGN IN</h1>
+            <P>Masukan username dan password </P>
+            <hr/> {{ if .error }}
+            <div class="alert alert-danger">
+                {{ .error }}
+            </div>
+            {{ end }}
+            <div class="form-group">
+                <label>username</label>
+                <input type="text" name="username" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>password</label>
+                <input type="password" name="password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success btn-block">SIGN IN </button>
+            <hr/>
+            <center>
+                <p>belum punya akun?
+                    <a href="/register">Mendaftar</a>
+                </p>
+            </center>
+</body>
+
+</html>
