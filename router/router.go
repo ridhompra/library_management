@@ -50,7 +50,7 @@ func Router() {
 	v1.Put("/visitor/:id", productcontrollers.UpdateVisitor)
 	v1.Delete("/visitor", productcontrollers.DeleteVisitor)
 
+	log.Println(app.Listen(":" + port))
 	log.Printf("Server Running port %s \n", port)
-	log.Println(app.Listen(port))
 
 }
