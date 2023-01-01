@@ -2,6 +2,7 @@ package productcontrollers
 
 import (
 	"project/library_Management/models"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -32,6 +33,7 @@ func CreateVisitor(c *fiber.Ctx) error {
 			"message": err.Error(),
 		})
 	}
+	visitor.CreateAt = time.Now()
 	if err := models.DB.Create(&visitor).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),

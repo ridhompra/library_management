@@ -22,9 +22,9 @@ func ConnectionDB() {
 	DBPassword := os.Getenv("DB_PASSWORD")
 	DBPort := os.Getenv("DB_PORT")
 	DBHost := os.Getenv("DB_HOST")
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True", DBUsername, DBPassword, DBHost, DBPort, DBName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&mb4&parseTime=True&loc=Local", DBUsername, DBPassword, DBHost, DBPort, DBName)
 
-	db, err := gorm.Open(mysql.Open(dsn))
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Println("Connection DB Failed")
 		return
