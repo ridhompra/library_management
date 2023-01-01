@@ -23,11 +23,11 @@ type Employee struct {
 	Sex      string `gorm:"varchar(1)" json:"sex"`
 }
 type Visitor struct {
-	Id       int64  `gorm:"primarykey" json:"id"`
-	Name     string `gorm:"varchar(50)" json:"name"`
-	Status   string `gorm:"varchar(20)" json:"status"`
-	Return   string `gorm:"type:date;default:null" json:"return"`
-	CreateAt time.Time
+	Id        int64  `gorm:"primarykey" json:"id"`
+	Name      string `gorm:"varchar(50)" json:"name"`
+	Status    string `gorm:"varchar(20)" json:"status"`
+	Return    string `gorm:"type:date;default:null" json:"return"`
+	CreatedAt time.Time
 }
 type User struct {
 	Id       int64  `gorm:"primarykey" json:"id"`
